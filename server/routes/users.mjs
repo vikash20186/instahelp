@@ -13,6 +13,14 @@ router.get('/:phone', async function(req, res, next) {
   res.send(userRec);
 });
 
+router.get('/byDevice/:deviceId', async function(req, res, next) {
+  logger("log",req.params);
+  const userRec = await models.User.findOne({devices: {$in: [req.params.deviceId]}});
+  res.send(userRec || {
+    phone: 'dummy'
+  });
+});
+
 router.post('/', async function(req, res, next) {
   try {
     const userRec = await (new models.User(req.body)).save();
@@ -20,7 +28,6 @@ router.post('/', async function(req, res, next) {
   } catch (err){
     res.status(500).send(errorResponse("unable to save"));
   }
-  
 });
 
 export default router;

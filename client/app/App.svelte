@@ -1,29 +1,30 @@
-<page>
-	<actionBar title="Master" />
-	<stackLayout>
-		<button text="To Details directly {deviceId}" on:tap="{showDetailWithProps}" />
-	</stackLayout>
-</page>
-
 <script>
-    import {Device} from '@nativescript/core';
-	import DetailPage from './Detail.svelte'
-	import { showModal } from 'svelte-native'
-
-	function showDetailWithProps() {
-		showModal({ page: DetailPage, props: { msg: 'hi' }, fullscreen: true })
-	}
-
-	 let deviceId = '';
-	 if (global.isIOS) {
-		deviceId = "";
-	// 	console.log(UIDevice);
-	// 	debugger;
-	 	//deviceId = "1.. " + (Device.uuid === undefined);
-	 	deviceId += Device.uuid;
-	 }
-
-	//const deviceId = 'temp';
+    import {Device, Http} from '@nativescript/core';
+	import {BASE_URL} from './shared/constant';
+	
+	const deviceId = Device.uuid;
+	const url = `${BASE_URL}/api/users/byDevice/${deviceId}`;
+	const userInfo$ = Http.getJSON(url);
 
    
 </script>
+
+
+<page>
+	<actionBar title="Master" />
+
+	{#await userInfo$}
+		<stackLayout>
+			<button text="Fetching user Details for {url}"/>
+		</stackLayout>	
+	{:then userInfo} 
+		<stackLayout>
+			<button text="Got the response {userInfo.phone}"/>
+		</stackLayout>
+	{:catch error}
+		<stackLayout>
+			<textView text="error {url}" />
+		</stackLayout>
+	{/await}
+	<textView text="outside {url}" />
+</page>
