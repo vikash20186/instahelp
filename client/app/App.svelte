@@ -1,30 +1,45 @@
 <script>
-    import {Device, Http} from '@nativescript/core';
-	import {BASE_URL} from './shared/constant';
-	
-	const deviceId = Device.uuid;
-	const url = `${BASE_URL}/api/users/byDevice/${deviceId}`;
-	const userInfo$ = Http.getJSON(url);
+	import RegisterComponent from './registration/Register.svelte'
+	import LandingComponent from './home/Landing.svelte';
+	import ErrorComponent from './error/Error.svelte';
+	import { getUserInfo } from  './init/fetch-user-profile';
 
+	let registerMode = false;
+	let isloading = true;
+	let userInfo;
+	let error;
+
+	getUserInfo().then(response => {
+		if (response && response.status === 404){
+			registerMode = true;
+		} else {
+			userInfo = response;
+		}
+	}).catch(err => {
+		error = err;
+	}).finally(() => {
+		isloading = false;
+	});
    
 </script>
 
-
 <page>
-	<actionBar title="Master" />
-
-	{#await userInfo$}
+	<actionBar title="InstaHelp" />
+	{#if isloading}
 		<stackLayout>
-			<button text="Fetching user Details for {url}"/>
+			<button text="Fetching user Details"/>
 		</stackLayout>	
-	{:then userInfo} 
+	{:else if userInfo} 
 		<stackLayout>
-			<button text="Got the response {userInfo.phone}"/>
+			<LandingComponent userInfo= {userInfo}/>
 		</stackLayout>
-	{:catch error}
+	{:else if error}
 		<stackLayout>
-			<textView text="error {url}" />
+			<ErrorComponent error={error}/>
 		</stackLayout>
-	{/await}
-	<textView text="outside {url}" />
+	{:else if registerMode}
+		<stackLayout>
+			<RegisterComponent/>
+		</stackLayout>
+	{/if}
 </page>

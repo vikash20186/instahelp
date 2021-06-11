@@ -16,9 +16,8 @@ router.get('/:phone', async function(req, res, next) {
 router.get('/byDevice/:deviceId', async function(req, res, next) {
   logger("log",req.params);
   const userRec = await models.User.findOne({devices: {$in: [req.params.deviceId]}});
-  res.send(userRec || {
-    phone: 'dummy'
-  });
+  
+  userRec ? res.send(userRec) : res.status(404).send();
 });
 
 router.post('/', async function(req, res, next) {
