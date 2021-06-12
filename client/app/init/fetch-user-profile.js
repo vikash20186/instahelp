@@ -1,9 +1,9 @@
-import {Device} from '@nativescript/core';
-import {BASE_URL} from '../shared/constant';
 
+import {BASE_URL} from '../shared/constant';
+import { getDeviceUUID } from '../utils/device.util';
 export async function getUserInfo(){
-    const deviceId = Device.uuid;
-    const url = `${BASE_URL}/api/users/byDevice/${deviceId}`;
+    const deviceId = getDeviceUUID();
+    const url = `${BASE_URL}/users/byDevice/${deviceId}`;
 
     try {
         const userInfoResponse = await fetch(url);

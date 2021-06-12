@@ -1,6 +1,6 @@
 <label textWrap="{true}">
     <formattedString>
-      <span text="{userInfo.phone}"/>
+      <span text="Phone: {userInfo.phone}"/>
     </formattedString>
 </label>
 

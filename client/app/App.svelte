@@ -20,6 +20,11 @@
 	}).finally(() => {
 		isloading = false;
 	});
+
+	function onRegistration(event){
+		registerMode = false;
+		userInfo = event.detail;
+	}
    
 </script>
 
@@ -39,7 +44,7 @@
 		</stackLayout>
 	{:else if registerMode}
 		<stackLayout>
-			<RegisterComponent/>
+			<RegisterComponent on:success={onRegistration}/>
 		</stackLayout>
 	{/if}
 </page>
