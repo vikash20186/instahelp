@@ -6,5 +6,9 @@ purpose of the file is to pass control to the app’s first module.
 
 import { svelteNative } from "svelte-native";
 import App from  "./App.svelte";
+import { WebRTC } from 'nativescript-webrtc-plugin';
+
+WebRTC.init();
+
 svelteNative(App, {});
 
